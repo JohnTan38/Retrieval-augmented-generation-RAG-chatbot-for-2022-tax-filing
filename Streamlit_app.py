@@ -17,7 +17,7 @@ with st.sidebar:
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
 
- # Store chat messages, and initialize the chat message history
+# Store chat messages, and initialize the chat message history
 if 'messages' not in st.session_state.keys():
     st.session_state.messages = [{"role": "assistant", "content": "Ask me a question about the 2022 tax filing!"}]
 
