@@ -68,7 +68,8 @@ if st.session_state.messages[-1]["role"] != "assistant":
             # Concatenate the retrieved prompts
             new_prompt = ""
             for document in prompt_retrived_content:
-                new_prompt += str(document).split("page_content='")[1].split("', metadata=")[0].replace('\n','')+". "
+                new_prompt += document.page_content+". "
+                #new_prompt += str(document).split("page_content='")[1].split("', metadata=")[0].replace('\n','')+". "
             new_prompt += st.session_state.messages[-1]["content"]
             # Replace the original prompt with the concatenated prompts
             new_messages = st.session_state.messages.copy()
