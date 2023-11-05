@@ -69,7 +69,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             new_prompt = ""
             for i in range(5):
                 new_prompt += prompt_retrived_content[i].page_content
-            new_prompt += st.session_state.messages[-1]["content"]
+            new_prompt += st.session_state.messages[-1]["content"].copy()
             # Replace the original prompt with the concatenated prompts
             new_messages = st.session_state.messages.copy()
             new_messages[-1]["content"] = new_prompt
