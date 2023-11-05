@@ -3,6 +3,7 @@ import openai
 import pinecone
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.vectorstores import Pinecone
+import copy
 
 st.set_page_config(page_title="Tax Pro 2022", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with the Tax Pro 2022, powered by GPT3.5")
@@ -71,7 +72,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
                 new_prompt += prompt_retrived_content[i].page_content
             new_prompt += st.session_state.messages[-1]["content"]
             # Replace the original prompt with the concatenated prompts
-            new_messages = st.session_state.messages[:]
+            new_messages = copy.deepcopy(st.session_state.messages)
             new_messages[-1]["content"] = new_prompt
             # Get the GPT3.5's response
             response = get_assistant_response(new_messages)
