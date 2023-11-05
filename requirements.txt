@@ -1,4 +1,4 @@
 streamlit
 openai
-pinecone==23.3.1
+pinecone
 langchain
