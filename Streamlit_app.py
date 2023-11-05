@@ -64,7 +64,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             # Retrieve similar prompts from pinecone database
-            prompt_retrived_content = vectorstore.similarity_search(st.session_state.messages[-1]["content"], k=3)
+            prompt_retrived_content = vectorstore.similarity_search(st.session_state.messages[-1]["content"], k=5)
             # Concatenate the retrieved prompts
             new_prompt = st.session_state.messages[-1]["content"]
             for document in prompt_retrived_content:
