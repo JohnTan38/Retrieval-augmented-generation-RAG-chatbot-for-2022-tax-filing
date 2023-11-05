@@ -66,9 +66,10 @@ if st.session_state.messages[-1]["role"] != "assistant":
             # Retrieve similar prompts from pinecone database
             prompt_retrived_content = vectorstore.similarity_search(st.session_state.messages[-1]["content"], k=5)
             # Concatenate the retrieved prompts
-            new_prompt = st.session_state.messages[-1]["content"]
+            new_prompt = ""
             for document in prompt_retrived_content:
-                new_prompt = new_prompt+". "+str(document).split("page_content='")[1].split("', metadata=")[0].replace('\n','')
+                new_prompt += str(document).split("page_content='")[1].split("', metadata=")[0].replace('\n','')+". "
+            new_prompt += st.session_state.messages[-1]["content"]
             # Replace the original prompt with the concatenated prompts
             new_messages = st.session_state.messages.copy()
             new_messages[-1]["content"] = new_prompt
