@@ -57,7 +57,7 @@ index = pinecone.Index(index_name)
 
 # Set embedding model and vectorstore, need to be used for prompt embedding and information retrieval from pinecone database
 embed_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
-vectorstore = Pinecone(index, embed_model.embed_query, text_field='text')
+vectorstore = Pinecone(index, embed_model.embed_query, 'text')
 
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
