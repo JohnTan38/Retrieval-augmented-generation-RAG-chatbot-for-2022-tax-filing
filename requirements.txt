@@ -3,4 +3,3 @@ openai==0.28.1
 pinecone-client==2.2.2
 langchain==0.0.240
 sentence-transformers==2.2.2
-copy
