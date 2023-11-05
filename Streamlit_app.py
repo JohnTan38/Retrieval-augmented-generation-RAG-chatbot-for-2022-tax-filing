@@ -47,9 +47,9 @@ def get_assistant_response(messages):
     return response
 
 # Pinecone key, environment, and index name used in the notebok
-pinecone_key = '12a34e92-f243-44db-a135-f1b7257e152d'
-pinecone_environment = 'gcp-starter'
-index_name = 'tax-rag2'
+pinecone_key = st.secrets['pinecone_key']
+pinecone_environment = st.secrets['pinecone_environment']
+index_name = st.secrets['index_name']
 
 # Connect to pinecone database
 pinecone.init(api_key=pinecone_key, environment=pinecone_environment)
