@@ -71,7 +71,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             new_prompt = ""
             for i in range(5):
                 new_prompt += prompt_retrived_content[i].page_content
-            new_prompt += st.session_state.messages[-1]["content"]
+            new_prompt += st.session_state.messages[-1]["content"].replace("\n","")
             # Replace the original prompt with the concatenated prompts
             new_messages = copy.deepcopy(st.session_state.messages)
             new_messages[-1]["content"] = new_prompt
