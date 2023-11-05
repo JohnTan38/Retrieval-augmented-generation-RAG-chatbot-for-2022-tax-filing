@@ -32,9 +32,10 @@ for message in st.session_state.messages:
 
 # User-provided prompt
 if prompt := st.chat_input(disabled=not openai_key):
+    prompt = prompt.replace("$","\$")
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.write(prompt.replace("$","\$"))
+        st.write(prompt)
 
 openai.api_key = openai_key
 
@@ -76,6 +77,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             new_messages[-1]["content"] = new_prompt
             # Get the GPT3.5's response
             response = get_assistant_response(new_messages)
-            st.write(response.replace("$","\$"))
+            response = response.replace("$","\$")
+            st.write(response)
     message = {"role": "assistant", "content": response}
     st.session_state.messages.append(message) # Add response to message history
