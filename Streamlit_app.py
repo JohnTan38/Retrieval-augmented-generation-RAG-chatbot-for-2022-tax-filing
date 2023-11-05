@@ -67,8 +67,8 @@ if st.session_state.messages[-1]["role"] != "assistant":
             prompt_retrived_content = vectorstore.similarity_search(st.session_state.messages[-1]["content"], k=3)
             # Concatenate the retrieved prompts
             new_prompt = st.session_state.messages[-1]["content"]
-            for content in prompt_retrived_content:
-                new_prompt = new_prompt+" "+content
+            for document in prompt_retrived_content:
+                new_prompt = new_prompt+". "+document["content"]
             # Replace the original prompt with the concatenated prompts
             new_messages = st.session_state.messages.copy()
             new_messages[-1]["content"] = new_prompt
