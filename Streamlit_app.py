@@ -71,7 +71,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
                 new_prompt += prompt_retrived_content[i].page_content
             new_prompt += st.session_state.messages[-1]["content"]
             # Replace the original prompt with the concatenated prompts
-            new_messages = st.session_state.messages.deepcopy()
+            new_messages = st.session_state.messages[:]
             new_messages[-1]["content"] = new_prompt
             # Get the GPT3.5's response
             response = get_assistant_response(new_messages)
