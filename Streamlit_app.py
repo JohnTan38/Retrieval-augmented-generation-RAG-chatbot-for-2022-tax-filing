@@ -1,8 +1,11 @@
 import streamlit as st
 import openai
+import pinecone
+from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain.vectorstores import Pinecone
 
-st.set_page_config(page_title="Chat with the Tax Assistant 2022, powered by GPT3.5", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
-st.title("Chat with the Tax Assistant 2022, powered by GPT3.5")
+st.set_page_config(page_title="Tax Pro 2022", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
+st.title("Chat with the Tax Pro 2022, powered by GPT3.5")
 
 # Sidebar for entering OpenAI key
 with st.sidebar:
@@ -32,13 +35,6 @@ if prompt := st.chat_input(disabled=not openai_key):
     with st.chat_message("user"):
         st.write(prompt)
 
-# embedding prompt
-# pinecone cosine similarity search
-# retrived content from pinecone
-# messages2 = st.session_state.messages.copy().append({"role": "user", "content": prompt + retrived content})
-# send messages2 to GPT3.5, but not st.session_state.messages
-# append GPT3.5's response to st.session_state.messages
-
 openai.api_key = openai_key
 
 # Function to get the GPT3.5's response
@@ -50,11 +46,34 @@ def get_assistant_response(messages):
     response = r.choices[0].message.content
     return response
 
+# Pinecone key, environment, and index name used in the notebok
+pinecone_key = '12a34e92-f243-44db-a135-f1b7257e152d'
+pinecone_environment = 'gcp-starter'
+index_name = 'tax-rag2'
+
+# Connect to pinecone database
+pinecone.init(api_key=pinecone_key, environment=pinecone_environment)
+index = pinecone.Index(index_name)
+
+# Set embedding model and vectorstore, need to be used for prompt embedding and information retrieval from pinecone database
+embed_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+vectorstore = Pinecone(index, embed_model.embed_query, text_field='text')
+
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = get_assistant_response(st.session_state.messages)
+            # Retrieve similar prompts from pinecone database
+            prompt_retrived_content = vectorstore.similarity_search(st.session_state.messages[-1]["content"], k=3)
+            # Concatenate the retrieved prompts
+            new_prompt = st.session_state.messages[-1]["content"]
+            for content in prompt_retrived_content:
+                new_prompt = new_prompt+" "+content
+            # Replace the original prompt with the concatenated prompts
+            new_messages = st.session_state.messages.copy()
+            new_messages[-1]["content"] = new_prompt
+            # Get the GPT3.5's response
+            response = get_assistant_response(new_messages)
             st.write(response)
     message = {"role": "assistant", "content": response}
     st.session_state.messages.append(message) # Add response to message history
